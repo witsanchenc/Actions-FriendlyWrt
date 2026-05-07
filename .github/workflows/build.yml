@@ -88,8 +88,12 @@ jobs:
         cp -r /tmp/openclash/luci-app-openclash friendlywrt/package/
 
         # PassWall
-        git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall.git /tmp/passwall
+        git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall.git /tmp/passwall
         cp -r /tmp/passwall/luci-app-passwall friendlywrt/package/
+
+        # PassWall dependencies
+        git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git /tmp/passwall-packages
+        cp -r /tmp/passwall-packages/* friendlywrt/package/ 2>/dev/null || true
 
         # Add to config
         cat >> configs/rockchip/01-nanopi <<EOL
@@ -103,11 +107,11 @@ jobs:
       run: |
         cd project
         # Aria2 download manager
-        git clone --depth=1 https://github.com/garypang13/luci-app-aria2.git /tmp/luci-app-aria2
+        git clone --depth=1 https://github.com/cyangy/luci-app-aria2.git /tmp/luci-app-aria2
         cp -r /tmp/luci-app-aria2/luci-app-aria2 friendlywrt/package/ 2>/dev/null || true
 
         # FileBrowser - web file manager
-        git clone --depth=1 https://github.com/garypang13/luci-app-filebrowser.git /tmp/luci-app-filebrowser
+        git clone --depth=1 https://github.com/xiaozhuai/luci-app-filebrowser.git /tmp/luci-app-filebrowser
         cp -r /tmp/luci-app-filebrowser/luci-app-filebrowser friendlywrt/package/ 2>/dev/null || true
 
         # Add NAS config
