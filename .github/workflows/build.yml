@@ -5,6 +5,10 @@ on:
   push:
     tags:
       - 'v*'
+
+permissions:
+  contents: write
+
 jobs:
   prepare_release:
     runs-on: ubuntu-22.04
