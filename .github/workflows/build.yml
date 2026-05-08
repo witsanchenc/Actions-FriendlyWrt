@@ -146,15 +146,14 @@ jobs:
         TARGET_IMAGE_DIRNAME=${DIST_DIR}
         TARGET_FRIENDLYWRT_CONFIG=${CONFIG}
         EOL
-        DEBUG_DOT_CONFIG=1 ./build.sh friendlywrt
 
-    - name: Fix kernel config for Docker IPVS
-      run: |
-        cd project
+        # Fix kernel config for Docker IPVS
         source .current_config.mk
         KCFG=kernel/arch/arm64/configs/$(awk '{print $1}' <<< "$TARGET_KERNEL_CONFIG")
         echo "CONFIG_IP_VS_FTP=m" >> "$KCFG"
         echo "CONFIG_NF_NAT_FTP=m" >> "$KCFG"
+
+        DEBUG_DOT_CONFIG=1 ./build.sh friendlywrt
 
     - name: Download package
       run: |
@@ -270,6 +269,12 @@ jobs:
         echo "archive_filename=$TGZ_FILE" >> $GITHUB_OUTPUT
         echo "dist_dir=$DIST_DIR" >> $GITHUB_OUTPUT
         echo "suffix=$SUFFIX" >> $GITHUB_OUTPUT
+
+        # Fix kernel config for Docker IPVS
+        source .current_config.mk
+        KCFG=kernel/arch/arm64/configs/$(awk '{print $1}' <<< "$TARGET_KERNEL_CONFIG")
+        echo "CONFIG_IP_VS_FTP=m" >> "$KCFG"
+        echo "CONFIG_NF_NAT_FTP=m" >> "$KCFG"
 
     - name: Unpack friendlywrt rootfs
       run: |
