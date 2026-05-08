@@ -35,6 +35,7 @@ jobs:
   build_friendlywrt:
     needs: prepare_release
     runs-on: ubuntu-22.04
+    timeout-minutes: 300
     strategy:
       matrix:
         VERSION: ['25.12']
@@ -156,20 +157,9 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile friendlyWrt
-      id: compile
-      continue-on-error: true
       run: |
         cd project/friendlywrt
-        if ! make -j$(nproc); then
-          echo "::warning::parallel build failed, retrying with V=s"
-          make -j1 V=s
-        fi
-
-    - name: Check the result and try again
-      if: steps.compile.outcome == 'failure'
-      run: |
-        cd project/friendlywrt
-        make -j1 V=s
+        make -j$(nproc) || make -j1 V=s
 
     - name: Create rootfs package
       id: create_rootfs_package
@@ -194,6 +184,7 @@ jobs:
   build_img:
     needs: [prepare_release,build_friendlywrt]
     runs-on: ubuntu-22.04
+    timeout-minutes: 120
 
     strategy:
       matrix:
@@ -339,7 +330,7 @@ jobs:
         gh release view "$RELEASE_TAG" \
           --repo "$GITHUB_REPOSITORY" \
           --json assets \
-          --jq '.assets[] | select(.name | startswith("rootfs-friendlywrt-") or startswith("host-pm-")) | .name' \
+          --jq '.assets[] | select(.name | startswith("rootfs-friendlywrt-")) | .name' \
         | while read -r asset; do
             [ -z "$asset" ] && continue
             echo "Deleting asset: $asset"
