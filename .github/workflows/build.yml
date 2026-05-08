@@ -35,7 +35,6 @@ jobs:
   build_friendlywrt:
     needs: prepare_release
     runs-on: ubuntu-22.04
-    timeout-minutes: 300
     strategy:
       matrix:
         VERSION: ['25.12']
@@ -184,7 +183,6 @@ jobs:
   build_img:
     needs: [prepare_release,build_friendlywrt]
     runs-on: ubuntu-22.04
-    timeout-minutes: 120
 
     strategy:
       matrix:
