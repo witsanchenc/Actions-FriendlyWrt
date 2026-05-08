@@ -148,6 +148,14 @@ jobs:
         EOL
         DEBUG_DOT_CONFIG=1 ./build.sh friendlywrt
 
+    - name: Fix kernel config for Docker IPVS
+      run: |
+        cd project
+        source .current_config.mk
+        KCFG=kernel/arch/arm64/configs/$(awk '{print $1}' <<< "$TARGET_KERNEL_CONFIG")
+        echo "CONFIG_IP_VS_FTP=m" >> "$KCFG"
+        echo "CONFIG_NF_NAT_FTP=m" >> "$KCFG"
+
     - name: Download package
       run: |
         cd project/friendlywrt
