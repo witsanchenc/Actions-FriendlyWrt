@@ -104,7 +104,7 @@ jobs:
         CONFIG_PACKAGE_luci-i18n-passwall-zh-cn=y
         EOL
 
-    - name: Add NAS packages (Samba + Aria2 + FileBrowser)
+    - name: Add NAS packages (Aria2 + FileBrowser)
       run: |
         cd project
         # Aria2 download manager
@@ -115,19 +115,12 @@ jobs:
         git clone --depth=1 https://github.com/xiaozhuai/luci-app-filebrowser.git /tmp/luci-app-filebrowser
         cp -r /tmp/luci-app-filebrowser/luci-app-filebrowser friendlywrt/package/ 2>/dev/null || true
 
-        # Add NAS config
+        # Add NAS config (Samba4 removed - causes cross-compile errors)
         cat >> configs/rockchip/01-nanopi <<EOL
         CONFIG_PACKAGE_luci-app-aria2=y
         CONFIG_PACKAGE_luci-i18n-aria2-zh-cn=y
-        CONFIG_PACKAGE_luci-app-samba4=y
-        CONFIG_PACKAGE_luci-i18n-samba4-zh-cn=y
         CONFIG_PACKAGE_luci-app-filebrowser=y
         CONFIG_PACKAGE_luci-i18n-filebrowser-zh-cn=y
-        CONFIG_PACKAGE_luci-app-diskman=y
-        CONFIG_PACKAGE_luci-i18n-diskman-zh-cn=y
-        CONFIG_PACKAGE_autosamba=y
-        CONFIG_PACKAGE_samba4-server=y
-        CONFIG_PACKAGE_samba4-utils=y
         EOL
 
     - name: Apply customizations
